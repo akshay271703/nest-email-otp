@@ -2,44 +2,68 @@
 
 ```bash
 $ npm install
+# for running application
+npm i pm2 -g
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ npm run start:pm2
 ```
 
-## Test
+### Before Running application
 
-```bash
-# unit tests
-$ npm run test
+````bash
+Make sure to install pm2 (globally, if you like)
+  * create a file pm2-bash.config.js in the root directory
+  * The configuration file looks like this format
 
-# e2e tests
-$ npm run test:e2e
+  ```bash
+  module.exports = {
+  apps: [
+    {
+      name: 'Nest Email Otp Auth',
+      script: 'dist/main.js',
+      env_development: {
+        PORT: 3000,
+        NODE_ENV: 'development',
+        DB_CONFIG: JSON.stringify({
+          type: 'postgres',
+          host: 'localhost',
+          username: '<YOUR USERNAME>',
+          password: '<YOUR PASSWORD',
+          database: '<YOUR DATABASE',
+          entities: ['dist/database/**/*.entity.{ts,js}'],
+          synchronize: <true or false>,
+          logging: true,
+          keepConnectionAlive: true
+        }),
+        AWS_CONFIG: JSON.stringify({
+          region: '<YOUR AWS REGION>',
+          apiVersion: '2010-12-01',
+          credentials: {
+            accessKeyId: '<YOUR AWS ACCESS KEY ID>',
+            secretAccessKey: '<YOUR AWS SECRET KEY ACCESS>'
+          }
+        }),
+        OTP_CONFIG: JSON.stringify({
+          minLength: 6,
+          digits: true,
+          lowerCaseAlphabets: false,
+          upperCaseAlphabets: false,
+          specialChars: false
+        }),
+        BCRYPT_ROUNDS: 10,
+        MAIL_TO_DEFAULT: <YOUR VERIFIED SES EMAIL>,
+      }
+    }
+  ]
+};
 
-# test coverage
-$ npm run test:cov
+````
+
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+```
