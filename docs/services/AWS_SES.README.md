@@ -9,7 +9,7 @@ npm i aws-sdk [Module]
 ## App Usage
 
 * Config Files | Options
-  * Location - src/app-config/config.ts [AWS_CONFIG]
+  * Location - pm2 file [AWS_CONFIG]
   * Options
     * region [MANDATORY]
     * credentials [MANDATORY]
