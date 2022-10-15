@@ -63,7 +63,7 @@ Make sure to install pm2 (globally, if you like)
 };
 
 ````
-
+## Other required prerequisite
 ```
-
+  - Require a verified SES email sender.
 ```
