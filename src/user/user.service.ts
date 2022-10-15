@@ -7,6 +7,7 @@ import { OTPService } from 'src/services/otp.service';
 import { plainToInstance, instanceToPlain } from 'class-transformer';
 import { AWSService } from 'src/aws/aws.service';
 import { transformMailBody } from 'src/utilities/transformers/mail.tranformers';
+import { MetricsService } from 'src/config/metrics/metrics.service';
 
 @Injectable()
 export class UserService {
@@ -14,7 +15,8 @@ export class UserService {
     private readonly userRepo: UserRepository,
     private readonly bcryptService: BcryptService,
     private readonly otpService: OTPService,
-    private readonly awsService: AWSService
+    private readonly awsService: AWSService,
+    private readonly metricService: MetricsService
   ) {}
 
   async createUser(user: CreateUserDto): Promise<CreateUserResponseDto> {
@@ -25,8 +27,11 @@ export class UserService {
       subject: 'Welcome to the club',
       text: `Your otp verification is ${user.otp}`
     });
+    const createdUser = await this.userRepo.createUser(user);
     await this.awsService.sendEmail(mailData);
-    return await this.userRepo.createUser(user);
+    // Every time a mail is sent successfully, the counter increments
+    this.metricService.mail_success_count.inc();
+    return createdUser;
   }
 
   async getAllUsers(): Promise<UserResponseDto[]> {

@@ -12,7 +12,7 @@ export class User extends Base {
   @Column({ name: 'lastname' })
   lastname: string;
 
-  @Column({ name: 'email' })
+  @Column({ name: 'email', unique: true })
   email: string;
 
   @Column({ name: 'password' })
